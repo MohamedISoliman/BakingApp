@@ -119,3 +119,5 @@ fabric.properties
 # Google Services (e.g. APIs or Firebase)
 
 # Freeline
+
+\.idea/
