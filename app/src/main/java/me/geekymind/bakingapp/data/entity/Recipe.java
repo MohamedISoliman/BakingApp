@@ -1,15 +1,15 @@
-package me.geekymind.bakingapp.domain.entity;
+package me.geekymind.bakingapp.data.entity;
 
 import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
-public class Response {
+public class Recipe {
 
   @SerializedName("image")
   private String image;
 
   @SerializedName("servings")
-  private int servings;
+  private double servings;
 
   @SerializedName("name")
   private String name;
@@ -18,7 +18,7 @@ public class Response {
   private List<IngredientsItem> ingredients;
 
   @SerializedName("id")
-  private int id;
+  private double id;
 
   @SerializedName("steps")
   private List<StepsItem> steps;
@@ -35,7 +35,7 @@ public class Response {
     this.servings = servings;
   }
 
-  public int getServings() {
+  public double getServings() {
     return servings;
   }
 
@@ -59,7 +59,7 @@ public class Response {
     this.id = id;
   }
 
-  public int getId() {
+  public double getId() {
     return id;
   }
 

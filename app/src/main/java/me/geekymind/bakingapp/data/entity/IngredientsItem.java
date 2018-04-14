@@ -1,11 +1,11 @@
-package me.geekymind.bakingapp.domain.entity;
+package me.geekymind.bakingapp.data.entity;
 
 import com.google.gson.annotations.SerializedName;
 
 public class IngredientsItem {
 
   @SerializedName("quantity")
-  private int quantity;
+  private double quantity;
 
   @SerializedName("measure")
   private String measure;
@@ -17,7 +17,7 @@ public class IngredientsItem {
     this.quantity = quantity;
   }
 
-  public int getQuantity() {
+  public double getQuantity() {
     return quantity;
   }
 

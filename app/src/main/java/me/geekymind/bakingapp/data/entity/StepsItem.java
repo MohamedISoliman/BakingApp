@@ -1,4 +1,4 @@
-package me.geekymind.bakingapp.domain.entity;
+package me.geekymind.bakingapp.data.entity;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -11,7 +11,7 @@ public class StepsItem {
   private String description;
 
   @SerializedName("id")
-  private int id;
+  private double id;
 
   @SerializedName("shortDescription")
   private String shortDescription;
@@ -39,7 +39,7 @@ public class StepsItem {
     this.id = id;
   }
 
-  public int getId() {
+  public double getId() {
     return id;
   }
 
