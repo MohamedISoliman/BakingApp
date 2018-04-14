@@ -41,11 +41,9 @@ public class RecipesAdapter extends RecyclerAdapter<Recipe, RecipesAdapter.Recip
     }
 
     public void bindData(Recipe recipe) {
-      Picasso.get()
-          .load(recipe.getImage())
-          .error(R.drawable.food_place_holder)
-          .into(recipeBinding.recipeImage);
-      
+      if (!recipe.getImage().isEmpty()) {
+        Picasso.get().load(recipe.getImage()).into(recipeBinding.recipeImage);
+      }
       recipeBinding.recipeTitle.setText(recipe.getName());
     }
   }
