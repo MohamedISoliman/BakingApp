@@ -1,8 +1,10 @@
 package me.geekymind.bakingapp.data.entity;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import com.google.gson.annotations.SerializedName;
 
-public class StepsItem {
+public class StepsItem implements Parcelable{
 
   @SerializedName("videoURL")
   private String videoURL;
@@ -79,4 +81,41 @@ public class StepsItem {
         + '\''
         + "}";
   }
+
+  @Override
+  public int describeContents() {
+    return 0;
+  }
+
+  @Override
+  public void writeToParcel(Parcel dest, int flags) {
+    dest.writeString(this.videoURL);
+    dest.writeString(this.description);
+    dest.writeDouble(this.id);
+    dest.writeString(this.shortDescription);
+    dest.writeString(this.thumbnailURL);
+  }
+
+  public StepsItem() {
+  }
+
+  protected StepsItem(Parcel in) {
+    this.videoURL = in.readString();
+    this.description = in.readString();
+    this.id = in.readDouble();
+    this.shortDescription = in.readString();
+    this.thumbnailURL = in.readString();
+  }
+
+  public static final Creator<StepsItem> CREATOR = new Creator<StepsItem>() {
+    @Override
+    public StepsItem createFromParcel(Parcel source) {
+      return new StepsItem(source);
+    }
+
+    @Override
+    public StepsItem[] newArray(int size) {
+      return new StepsItem[size];
+    }
+  };
 }

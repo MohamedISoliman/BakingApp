@@ -1,9 +1,12 @@
 package me.geekymind.bakingapp.data.entity;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import com.google.gson.annotations.SerializedName;
+import java.util.ArrayList;
 import java.util.List;
 
-public class Recipe {
+public class Recipe implements Parcelable {
 
   @SerializedName("image")
   private String image;
@@ -15,7 +18,7 @@ public class Recipe {
   private String name;
 
   @SerializedName("ingredients")
-  private List<IngredientsItem> ingredients;
+  private List<Ingredient> ingredients;
 
   @SerializedName("id")
   private double id;
@@ -47,11 +50,11 @@ public class Recipe {
     return name;
   }
 
-  public void setIngredients(List<IngredientsItem> ingredients) {
+  public void setIngredients(List<Ingredient> ingredients) {
     this.ingredients = ingredients;
   }
 
-  public List<IngredientsItem> getIngredients() {
+  public List<Ingredient> getIngredients() {
     return ingredients;
   }
 
@@ -94,4 +97,44 @@ public class Recipe {
         + '\''
         + "}";
   }
+
+  @Override
+  public int describeContents() {
+    return 0;
+  }
+
+  @Override
+  public void writeToParcel(Parcel dest, int flags) {
+    dest.writeString(this.image);
+    dest.writeDouble(this.servings);
+    dest.writeString(this.name);
+    dest.writeTypedList(this.ingredients);
+    dest.writeDouble(this.id);
+    dest.writeList(this.steps);
+  }
+
+  public Recipe() {
+  }
+
+  protected Recipe(Parcel in) {
+    this.image = in.readString();
+    this.servings = in.readDouble();
+    this.name = in.readString();
+    this.ingredients = in.createTypedArrayList(Ingredient.CREATOR);
+    this.id = in.readDouble();
+    this.steps = new ArrayList<StepsItem>();
+    in.readList(this.steps, StepsItem.class.getClassLoader());
+  }
+
+  public static final Creator<Recipe> CREATOR = new Creator<Recipe>() {
+    @Override
+    public Recipe createFromParcel(Parcel source) {
+      return new Recipe(source);
+    }
+
+    @Override
+    public Recipe[] newArray(int size) {
+      return new Recipe[size];
+    }
+  };
 }

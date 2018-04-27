@@ -1,5 +1,6 @@
 package me.geekymind.bakingapp.ui.recipes;
 
+import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -10,6 +11,7 @@ import me.geekymind.bakingapp.R;
 import me.geekymind.bakingapp.data.entity.Recipe;
 import me.geekymind.bakingapp.databinding.ItemRecipeBinding;
 import me.geekymind.bakingapp.ui.RecyclerAdapter;
+import me.geekymind.bakingapp.ui.reciepedetails.RecipeDetailsActivity;
 
 /**
  * Created by Mohamed Ibrahim on 4/14/18.
@@ -34,17 +36,25 @@ public class RecipesAdapter extends RecyclerAdapter<Recipe, RecipesAdapter.Recip
   class RecipeViewHolder extends RecyclerView.ViewHolder {
 
     private ItemRecipeBinding recipeBinding;
+    private final Context context;
 
     public RecipeViewHolder(ItemRecipeBinding recipeBinding) {
       super(recipeBinding.getRoot());
       this.recipeBinding = recipeBinding;
+      context = recipeBinding.getRoot().getContext();
     }
 
     public void bindData(Recipe recipe) {
       if (!recipe.getImage().isEmpty()) {
         Picasso.get().load(recipe.getImage()).into(recipeBinding.recipeImage);
       }
+      recipeBinding.recipeServings.append(String.valueOf(recipe.getServings()));
       recipeBinding.recipeTitle.setText(recipe.getName());
+      recipeBinding.itemRecipeContainer.setOnClickListener(v -> navigateToDetails(recipe));
+    }
+
+    private void navigateToDetails(Recipe recipe) {
+      RecipeDetailsActivity.start(context, recipe);
     }
   }
 }

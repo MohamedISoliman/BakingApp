@@ -64,7 +64,7 @@ public class RecipesViewModel extends ViewModel {
   }
 
   private <T> SingleTransformer<T, T> loadingTransformer() {
-    return upstream -> upstream.doOnSubscribe(disposable -> isLoading.onNext(true))
+    return upstream -> upstream.doOnSubscribe(__ -> isLoading.onNext(true))
         .doAfterTerminate(() -> isLoading.onNext(false));
   }
 
