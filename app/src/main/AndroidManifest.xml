@@ -22,6 +22,7 @@
     </activity>
     <activity android:name=".ui.reciepedetails.RecipeDetailsViewModel"/>
     <activity android:name=".ui.reciepedetails.RecipeDetailsActivity"/>
+    <activity android:name=".ui.stepdetail.StepActivity"/>
   </application>
 
 </manifest>

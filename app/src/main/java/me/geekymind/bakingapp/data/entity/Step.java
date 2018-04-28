@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import com.google.gson.annotations.SerializedName;
 
-public class Step implements Parcelable{
+public class Step implements Parcelable {
 
   @SerializedName("videoURL")
   private String videoURL;

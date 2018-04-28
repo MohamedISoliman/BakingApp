@@ -26,7 +26,7 @@ public abstract class RecyclerAdapter<T, VH extends RecyclerView.ViewHolder>
     return data.size();
   }
 
-  protected List<T> getData(){
+  protected List<T> getData() {
     return data;
   }
 }

@@ -9,6 +9,7 @@ import me.geekymind.bakingapp.R;
 import me.geekymind.bakingapp.base.AppBaseAdapter;
 import me.geekymind.bakingapp.data.entity.Step;
 import me.geekymind.bakingapp.databinding.ItemStepBinding;
+import me.geekymind.bakingapp.ui.stepdetail.StepActivity;
 
 /**
  * Created by Mohamed Ibrahim on 4/28/18.
@@ -41,6 +42,13 @@ public class InstructionsAdapter
 
     void bindData(Step step) {
       binding.stepTitle.setText(step.getShortDescription());
+      binding.stepLayoutContainer.setOnClickListener(v -> {
+        navigateToDetails(step);
+      });
+    }
+
+    private void navigateToDetails(Step step) {
+      StepActivity.start(binding.getRoot().getContext(), step);
     }
   }
 }
