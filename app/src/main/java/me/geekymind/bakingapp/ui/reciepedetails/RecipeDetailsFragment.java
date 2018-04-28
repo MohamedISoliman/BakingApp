@@ -19,6 +19,7 @@ import me.geekymind.bakingapp.R;
 import me.geekymind.bakingapp.data.entity.Recipe;
 import me.geekymind.bakingapp.databinding.FragmentRecipeDetailsBinding;
 import me.geekymind.bakingapp.ui.reciepedetails.ingrediants.IngredientsAdapter;
+import me.geekymind.bakingapp.ui.reciepedetails.instructions.InstructionsAdapter;
 
 /**
  * Created by Mohamed Ibrahim on 4/27/18.
@@ -61,6 +62,7 @@ public class RecipeDetailsFragment extends Fragment {
   }
 
   private void setupRecycler() {
+    //ingredients
     adapterIngredients = new IngredientsAdapter();
     RecyclerView recyclerView = binding.recyclerIngredients;
     LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
@@ -69,11 +71,21 @@ public class RecipeDetailsFragment extends Fragment {
     recyclerView.setHasFixedSize(true);
     recyclerView.setAdapter(adapterIngredients);
     adapterIngredients.setData(recipe.getIngredients());
+
+    //instructions
+    InstructionsAdapter instructionsAdapter = new InstructionsAdapter();
+    RecyclerView instructionsRecycler = binding.recyclerInstructions;
+    instructionsRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
+    instructionsRecycler.addItemDecoration(
+        new DividerItemDecoration(getContext(), RecyclerView.VERTICAL));
+    instructionsRecycler.setHasFixedSize(true);
+    instructionsRecycler.setAdapter(instructionsAdapter);
+    instructionsAdapter.setData(recipe.getSteps());
   }
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
-    switch (item.getItemId()){
+    switch (item.getItemId()) {
       case android.R.id.home:
         getActivity().onBackPressed();
         break;

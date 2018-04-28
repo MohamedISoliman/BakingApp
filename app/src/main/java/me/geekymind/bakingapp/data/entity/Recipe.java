@@ -24,7 +24,7 @@ public class Recipe implements Parcelable {
   private double id;
 
   @SerializedName("steps")
-  private List<StepsItem> steps;
+  private List<Step> steps;
 
   public void setImage(String image) {
     this.image = image;
@@ -66,11 +66,11 @@ public class Recipe implements Parcelable {
     return id;
   }
 
-  public void setSteps(List<StepsItem> steps) {
+  public void setSteps(List<Step> steps) {
     this.steps = steps;
   }
 
-  public List<StepsItem> getSteps() {
+  public List<Step> getSteps() {
     return steps;
   }
 
@@ -122,8 +122,8 @@ public class Recipe implements Parcelable {
     this.name = in.readString();
     this.ingredients = in.createTypedArrayList(Ingredient.CREATOR);
     this.id = in.readDouble();
-    this.steps = new ArrayList<StepsItem>();
-    in.readList(this.steps, StepsItem.class.getClassLoader());
+    this.steps = new ArrayList<Step>();
+    in.readList(this.steps, Step.class.getClassLoader());
   }
 
   public static final Creator<Recipe> CREATOR = new Creator<Recipe>() {

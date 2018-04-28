@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="16dp"
+      android:clickable="true"
+      android:focusable="true"
+      android:foreground="?android:attr/selectableItemBackground"
+      android:orientation="horizontal"
+      android:paddingBottom="8dp"
+      android:paddingTop="8dp"
+      android:weightSum="1"
+      >
+    <TextView
+        android:id="@+id/step_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_toStartOf="@+id/arrow"
+        android:maxLines="3"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        android:textSize="18sp"
+        tools:text="@tools:sample/lorem"
+        />
+    <ImageView
+        android:id="@+id/arrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center|end"
+        android:src="@drawable/ic_navigate_next_black_24dp"
+        />
+  </RelativeLayout>
+</layout>
