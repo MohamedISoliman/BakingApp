@@ -48,7 +48,7 @@ public class RecipesAdapter extends RecyclerAdapter<Recipe, RecipesAdapter.Recip
       if (!recipe.getImage().isEmpty()) {
         Picasso.get().load(recipe.getImage()).into(recipeBinding.recipeImage);
       }
-      recipeBinding.recipeServings.append(String.valueOf(recipe.getServings()));
+      recipeBinding.recipeServings.setText(String.valueOf(recipe.getServings()));
       recipeBinding.recipeTitle.setText(recipe.getName());
       recipeBinding.itemRecipeContainer.setOnClickListener(v -> navigateToDetails(recipe));
     }

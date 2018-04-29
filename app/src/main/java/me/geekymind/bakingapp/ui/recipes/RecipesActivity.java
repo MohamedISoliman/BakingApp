@@ -5,6 +5,7 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import es.dmoral.toasty.Toasty;
@@ -32,7 +33,9 @@ public class RecipesActivity extends AppCompatActivity {
   private void setupViews() {
     recipesAdapter = new RecipesAdapter();
     RecyclerView recyclerView = recipesBinding.recipesRecyclerView;
-    LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+    boolean useGrid = getResources().getBoolean(R.bool.tablet_mode);
+    RecyclerView.LayoutManager layoutManager =
+        useGrid ? new GridLayoutManager(this, 3) : new LinearLayoutManager(this);
     recyclerView.setLayoutManager(layoutManager);
     recyclerView.setHasFixedSize(true);
     recyclerView.setAdapter(recipesAdapter);
