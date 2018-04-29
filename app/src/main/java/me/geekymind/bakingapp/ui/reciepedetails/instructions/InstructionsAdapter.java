@@ -9,7 +9,7 @@ import me.geekymind.bakingapp.R;
 import me.geekymind.bakingapp.base.AppBaseAdapter;
 import me.geekymind.bakingapp.data.entity.Step;
 import me.geekymind.bakingapp.databinding.ItemStepBinding;
-import me.geekymind.bakingapp.ui.stepdetail.StepActivity;
+import me.geekymind.bakingapp.ui.reciepedetails.stepdetail.StepActivity;
 
 /**
  * Created by Mohamed Ibrahim on 4/28/18.

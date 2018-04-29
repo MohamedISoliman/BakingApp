@@ -1,4 +1,4 @@
-package me.geekymind.bakingapp.ui.stepdetail;
+package me.geekymind.bakingapp.ui.reciepedetails.stepdetail;
 
 import android.content.Context;
 import android.content.Intent;
