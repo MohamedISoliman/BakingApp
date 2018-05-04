@@ -26,4 +26,8 @@ public abstract class AppBaseAdapter<VH extends RecyclerView.ViewHolder, T>
   public T getDataItem(int position) {
     return data.get(position);
   }
+
+  public List<T> getData() {
+    return data;
+  }
 }

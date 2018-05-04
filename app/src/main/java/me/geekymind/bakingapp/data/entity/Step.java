@@ -20,6 +20,7 @@ public class Step implements Parcelable {
 
   @SerializedName("thumbnailURL")
   private String thumbnailURL;
+  public boolean isSelected;
 
   public void setVideoURL(String videoURL) {
     this.videoURL = videoURL;
@@ -61,6 +62,14 @@ public class Step implements Parcelable {
     return thumbnailURL;
   }
 
+  public boolean isSelected() {
+    return isSelected;
+  }
+
+  public void setSelected(boolean selected) {
+    isSelected = selected;
+  }
+
   @Override
   public String toString() {
     return "StepsItem{"
@@ -82,6 +91,9 @@ public class Step implements Parcelable {
         + "}";
   }
 
+  public Step() {
+  }
+
   @Override
   public int describeContents() {
     return 0;
@@ -94,9 +106,7 @@ public class Step implements Parcelable {
     dest.writeDouble(this.id);
     dest.writeString(this.shortDescription);
     dest.writeString(this.thumbnailURL);
-  }
-
-  public Step() {
+    dest.writeByte(this.isSelected ? (byte) 1 : (byte) 0);
   }
 
   protected Step(Parcel in) {
@@ -105,6 +115,7 @@ public class Step implements Parcelable {
     this.id = in.readDouble();
     this.shortDescription = in.readString();
     this.thumbnailURL = in.readString();
+    this.isSelected = in.readByte() != 0;
   }
 
   public static final Creator<Step> CREATOR = new Creator<Step>() {

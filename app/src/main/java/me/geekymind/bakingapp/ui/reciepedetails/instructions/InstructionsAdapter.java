@@ -1,5 +1,6 @@
 package me.geekymind.bakingapp.ui.reciepedetails.instructions;
 
+import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -9,13 +10,21 @@ import me.geekymind.bakingapp.R;
 import me.geekymind.bakingapp.base.AppBaseAdapter;
 import me.geekymind.bakingapp.data.entity.Step;
 import me.geekymind.bakingapp.databinding.ItemStepBinding;
-import me.geekymind.bakingapp.ui.reciepedetails.stepdetail.StepActivity;
+import me.geekymind.bakingapp.ui.reciepedetails.StepClickListener;
 
 /**
  * Created by Mohamed Ibrahim on 4/28/18.
  */
 public class InstructionsAdapter
     extends AppBaseAdapter<InstructionsAdapter.InstructionViewHolder, Step> {
+
+  private final StepClickListener stepClickListener;
+  private int currentSelected;
+
+  public InstructionsAdapter(StepClickListener stepClickListener, Step selected) {
+    this.stepClickListener = stepClickListener;
+    setSelected(selected);
+  }
 
   @NonNull
   @Override
@@ -31,24 +40,45 @@ public class InstructionsAdapter
     holder.bindData(step);
   }
 
+  private void setSelected(Step selected) {
+    for (int i = 0; i < getItemCount(); i++) {
+      if (selected.getId() == getDataItem(i).getId()) {
+        currentSelected = i;
+        getDataItem(i).setSelected(true);
+        break;
+      }
+    }
+  }
+
   class InstructionViewHolder extends RecyclerView.ViewHolder {
 
     private ItemStepBinding binding;
+    private Context context;
+    private boolean isTabletMode;
 
     InstructionViewHolder(ItemStepBinding binding) {
       super(binding.getRoot());
       this.binding = binding;
+      this.context = binding.getRoot().getContext();
+      isTabletMode = context.getResources().getBoolean(R.bool.tablet_mode);
     }
 
     void bindData(Step step) {
+      binding.backgroundLayout.setBackgroundColor(
+          step.isSelected ? context.getResources().getColor(R.color.blue_grey_300) : 0);
       binding.stepTitle.setText(step.getShortDescription());
       binding.stepLayoutContainer.setOnClickListener(v -> {
-        navigateToDetails(step);
+        if (isTabletMode) updateBackground();
+        stepClickListener.onStepSelected(step);
       });
     }
 
-    private void navigateToDetails(Step step) {
-      StepActivity.start(binding.getRoot().getContext(), step);
+    private void updateBackground() {
+      getDataItem(getAdapterPosition()).setSelected(true);
+      notifyItemChanged(getAdapterPosition());
+      getDataItem(currentSelected).setSelected(false);
+      notifyItemChanged(currentSelected);
+      currentSelected = getAdapterPosition();
     }
   }
 }

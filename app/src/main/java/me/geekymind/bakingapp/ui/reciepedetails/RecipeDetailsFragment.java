@@ -1,18 +1,15 @@
 package me.geekymind.bakingapp.ui.reciepedetails;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import me.geekymind.bakingapp.R;
@@ -20,6 +17,7 @@ import me.geekymind.bakingapp.data.entity.Recipe;
 import me.geekymind.bakingapp.databinding.FragmentRecipeDetailsBinding;
 import me.geekymind.bakingapp.ui.reciepedetails.ingrediants.IngredientsAdapter;
 import me.geekymind.bakingapp.ui.reciepedetails.instructions.InstructionsAdapter;
+import me.geekymind.bakingapp.ui.reciepedetails.stepdetail.StepActivity;
 
 /**
  * Created by Mohamed Ibrahim on 4/27/18.
@@ -29,7 +27,9 @@ public class RecipeDetailsFragment extends Fragment {
   private FragmentRecipeDetailsBinding binding;
   private static final String KEY_INGREDIENT = "IGREDIENT";
   private IngredientsAdapter adapterIngredients;
-  private Recipe recipe;
+  private RecipeDetailsViewModel viewModel;
+  private boolean isTabletMode;
+  private InstructionsAdapter instructionsAdapter;
 
   public static RecipeDetailsFragment newInstance(Recipe recipe) {
     Bundle args = new Bundle();
@@ -46,19 +46,16 @@ public class RecipeDetailsFragment extends Fragment {
     binding =
         DataBindingUtil.inflate(getLayoutInflater(), R.layout.fragment_recipe_details, container,
             false);
-    recipe = getArguments().getParcelable(KEY_INGREDIENT);
-    setupToolbar();
-    setupRecycler();
+    viewModel = ViewModelProviders.of(getActivity()).get(RecipeDetailsViewModel.class);
+    isTabletMode = getResources().getBoolean(R.bool.tablet_mode);
+
     return binding.getRoot();
   }
 
-  private void setupToolbar() {
-    setHasOptionsMenu(true);
-    Toolbar toolbar = binding.getRoot().findViewById(R.id.toolbar);
-    ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-    ActionBar supportActionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-    supportActionBar.setTitle(recipe.getName());
-    supportActionBar.setDisplayHomeAsUpEnabled(true);
+  @Override
+  public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+    super.onActivityCreated(savedInstanceState);
+    setupRecycler();
   }
 
   private void setupRecycler() {
@@ -70,26 +67,22 @@ public class RecipeDetailsFragment extends Fragment {
     recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), RecyclerView.VERTICAL));
     recyclerView.setHasFixedSize(true);
     recyclerView.setAdapter(adapterIngredients);
-    adapterIngredients.setData(recipe.getIngredients());
+    adapterIngredients.setData(viewModel.getRecipe().getIngredients());
 
     //instructions
-    InstructionsAdapter instructionsAdapter = new InstructionsAdapter();
+    instructionsAdapter = new InstructionsAdapter(step -> {
+      if (isTabletMode) {
+        viewModel.setSelectedStep(step);
+      } else {
+        StepActivity.start(getContext(), step);
+      }
+    }, viewModel.getSelectedStep());
     RecyclerView instructionsRecycler = binding.recyclerInstructions;
     instructionsRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
     instructionsRecycler.addItemDecoration(
         new DividerItemDecoration(getContext(), RecyclerView.VERTICAL));
     instructionsRecycler.setHasFixedSize(true);
     instructionsRecycler.setAdapter(instructionsAdapter);
-    instructionsAdapter.setData(recipe.getSteps());
-  }
-
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
-    switch (item.getItemId()) {
-      case android.R.id.home:
-        getActivity().onBackPressed();
-        break;
-    }
-    return super.onOptionsItemSelected(item);
+    instructionsAdapter.setData(viewModel.getRecipe().getSteps());
   }
 }
