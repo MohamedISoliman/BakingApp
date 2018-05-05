@@ -1,4 +1,4 @@
-package me.geekymind.bakingapp.ui.reciepedetails.instructions;
+package me.geekymind.bakingapp.ui.reciepedetails;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
@@ -10,7 +10,6 @@ import me.geekymind.bakingapp.R;
 import me.geekymind.bakingapp.base.AppBaseAdapter;
 import me.geekymind.bakingapp.data.entity.Step;
 import me.geekymind.bakingapp.databinding.ItemStepBinding;
-import me.geekymind.bakingapp.ui.reciepedetails.StepClickListener;
 
 /**
  * Created by Mohamed Ibrahim on 4/28/18.
@@ -41,10 +40,12 @@ public class InstructionsAdapter
   }
 
   private void setSelected(Step selected) {
-    for (int i = 0; i < getItemCount(); i++) {
-      if (selected.getId() == getDataItem(i).getId()) {
+    int itemCount = getItemCount();
+    for (int i = 0; i < itemCount; i++) {
+      Step dataItem = getDataItem(i);
+      if (selected.getId() == dataItem.getId()) {
         currentSelected = i;
-        getDataItem(i).setSelected(true);
+        dataItem.setSelected(true);
         break;
       }
     }

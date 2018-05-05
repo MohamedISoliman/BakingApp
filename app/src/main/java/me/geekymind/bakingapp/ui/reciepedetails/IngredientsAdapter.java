@@ -1,4 +1,4 @@
-package me.geekymind.bakingapp.ui.reciepedetails.ingrediants;
+package me.geekymind.bakingapp.ui.reciepedetails;
 
 import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;

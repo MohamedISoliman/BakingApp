@@ -1,4 +1,4 @@
-package me.geekymind.bakingapp.ui.reciepedetails.stepdetail;
+package me.geekymind.bakingapp.ui.steps;
 
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
@@ -56,7 +56,10 @@ public class StepFragment extends Fragment {
   }
 
   private void setupVideoPlayer() {
-    if (step.getVideoURL() == null || step.getVideoURL().isEmpty()) return;
+    if (step.getVideoURL() == null || step.getVideoURL().isEmpty()) {
+      binding.videoPlayer.setVisibility(View.GONE);
+      return;
+    }
     binding.videoPlayer.setVisibility(View.VISIBLE);
     TrackSelector trackSelector = new DefaultTrackSelector();
     LoadControl loadControl = new DefaultLoadControl();

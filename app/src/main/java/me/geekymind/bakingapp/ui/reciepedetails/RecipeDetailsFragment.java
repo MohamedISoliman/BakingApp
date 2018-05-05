@@ -15,9 +15,7 @@ import android.view.ViewGroup;
 import me.geekymind.bakingapp.R;
 import me.geekymind.bakingapp.data.entity.Recipe;
 import me.geekymind.bakingapp.databinding.FragmentRecipeDetailsBinding;
-import me.geekymind.bakingapp.ui.reciepedetails.ingrediants.IngredientsAdapter;
-import me.geekymind.bakingapp.ui.reciepedetails.instructions.InstructionsAdapter;
-import me.geekymind.bakingapp.ui.reciepedetails.stepdetail.StepActivity;
+import me.geekymind.bakingapp.ui.steps.StepActivity;
 
 /**
  * Created by Mohamed Ibrahim on 4/27/18.
@@ -74,7 +72,7 @@ public class RecipeDetailsFragment extends Fragment {
       if (isTabletMode) {
         viewModel.setSelectedStep(step);
       } else {
-        StepActivity.start(getContext(), step);
+        StepActivity.start(getContext(), step, viewModel.getRecipe().getSteps());
       }
     }, viewModel.getSelectedStep());
     RecyclerView instructionsRecycler = binding.recyclerInstructions;

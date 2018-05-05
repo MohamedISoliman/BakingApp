@@ -14,7 +14,7 @@ import me.geekymind.bakingapp.R;
 import me.geekymind.bakingapp.data.entity.Recipe;
 import me.geekymind.bakingapp.data.entity.Step;
 import me.geekymind.bakingapp.databinding.ActivityRecipeDetailsBinding;
-import me.geekymind.bakingapp.ui.reciepedetails.stepdetail.StepFragment;
+import me.geekymind.bakingapp.ui.steps.StepFragment;
 
 /**
  * Created by Mohamed Ibrahim on 4/27/18.
