@@ -26,16 +26,14 @@ public class RecipesViewModel extends ViewModel {
   private Subject<Recipe> selectedRecipe = BehaviorSubject.create();
   private Subject<Boolean> isLoading = BehaviorSubject.createDefault(false);
   private Subject<String> errorMessageSubject = PublishSubject.create();
-
   private final CompositeDisposable disposables = new CompositeDisposable();
   private Disposable disposable;
 
   public RecipesViewModel() {
     repository = AppDependencies.getInstance().getRecipesRepository();
-    init();
   }
 
-  private void init() {
+  public void loadRecipes() {
     if (disposable == null) {
       disposable = Observable.just("start")
           .subscribeOn(Schedulers.io())
@@ -66,11 +64,5 @@ public class RecipesViewModel extends ViewModel {
   private <T> SingleTransformer<T, T> loadingTransformer() {
     return upstream -> upstream.doOnSubscribe(__ -> isLoading.onNext(true))
         .doAfterTerminate(() -> isLoading.onNext(false));
-  }
-
-  @Override
-  protected void onCleared() {
-    disposables.clear();
-    super.onCleared();
   }
 }

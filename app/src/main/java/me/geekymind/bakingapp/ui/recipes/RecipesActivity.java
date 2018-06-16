@@ -4,6 +4,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -28,6 +29,7 @@ public class RecipesActivity extends AppCompatActivity {
     viewModel = ViewModelProviders.of(this).get(RecipesViewModel.class);
     setupViews();
     setupListeners();
+    viewModel.loadRecipes();
   }
 
   private void setupViews() {
@@ -39,6 +41,7 @@ public class RecipesActivity extends AppCompatActivity {
     recyclerView.setLayoutManager(layoutManager);
     recyclerView.setHasFixedSize(true);
     recyclerView.setAdapter(recipesAdapter);
+    ViewCompat.setNestedScrollingEnabled(recyclerView, false);
     recipesBinding.refreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorAccent);
     recipesBinding.refreshLayout.setOnRefreshListener(() -> {
       //TODO: what is the best way to load more .. search!

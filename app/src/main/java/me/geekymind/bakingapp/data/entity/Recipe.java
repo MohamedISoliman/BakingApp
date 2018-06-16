@@ -1,12 +1,18 @@
 package me.geekymind.bakingapp.data.entity;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
 import com.google.gson.annotations.SerializedName;
-import java.util.ArrayList;
 import java.util.List;
 
+@Entity(tableName = "recipes")
 public class Recipe implements Parcelable {
+
+  @PrimaryKey(autoGenerate = true)
+  private int primaryKey;
 
   @SerializedName("image")
   private String image;
@@ -18,84 +24,71 @@ public class Recipe implements Parcelable {
   private String name;
 
   @SerializedName("ingredients")
+  @Ignore
   private List<Ingredient> ingredients;
 
   @SerializedName("id")
+  @Ignore
   private double id;
 
   @SerializedName("steps")
+  @Ignore
   private List<Step> steps;
 
-  public void setImage(String image) {
-    this.image = image;
+  public int getPrimaryKey() {
+    return primaryKey;
+  }
+
+  public void setPrimaryKey(int primaryKey) {
+    this.primaryKey = primaryKey;
   }
 
   public String getImage() {
     return image;
   }
 
-  public void setServings(int servings) {
-    this.servings = servings;
+  public void setImage(String image) {
+    this.image = image;
   }
 
   public double getServings() {
     return servings;
   }
 
-  public void setName(String name) {
-    this.name = name;
+  public void setServings(double servings) {
+    this.servings = servings;
   }
 
   public String getName() {
     return name;
   }
 
-  public void setIngredients(List<Ingredient> ingredients) {
-    this.ingredients = ingredients;
+  public void setName(String name) {
+    this.name = name;
   }
 
   public List<Ingredient> getIngredients() {
     return ingredients;
   }
 
-  public void setId(int id) {
-    this.id = id;
+  public void setIngredients(List<Ingredient> ingredients) {
+    this.ingredients = ingredients;
   }
 
   public double getId() {
     return id;
   }
 
-  public void setSteps(List<Step> steps) {
-    this.steps = steps;
+  public void setId(double id) {
+    this.id = id;
   }
 
   public List<Step> getSteps() {
     return steps;
   }
 
-  @Override
-  public String toString() {
-    return "Response{"
-        + "image = '"
-        + image
-        + '\''
-        + ",servings = '"
-        + servings
-        + '\''
-        + ",name = '"
-        + name
-        + '\''
-        + ",ingredients = '"
-        + ingredients
-        + '\''
-        + ",id = '"
-        + id
-        + '\''
-        + ",steps = '"
-        + steps
-        + '\''
-        + "}";
+  public void setSteps(List<Step> steps) {
+    this.steps = steps;
   }
 
   @Override
@@ -105,25 +98,26 @@ public class Recipe implements Parcelable {
 
   @Override
   public void writeToParcel(Parcel dest, int flags) {
+    dest.writeInt(this.primaryKey);
     dest.writeString(this.image);
     dest.writeDouble(this.servings);
     dest.writeString(this.name);
     dest.writeTypedList(this.ingredients);
     dest.writeDouble(this.id);
-    dest.writeList(this.steps);
+    dest.writeTypedList(this.steps);
   }
 
   public Recipe() {
   }
 
   protected Recipe(Parcel in) {
+    this.primaryKey = in.readInt();
     this.image = in.readString();
     this.servings = in.readDouble();
     this.name = in.readString();
     this.ingredients = in.createTypedArrayList(Ingredient.CREATOR);
     this.id = in.readDouble();
-    this.steps = new ArrayList<Step>();
-    in.readList(this.steps, Step.class.getClassLoader());
+    this.steps = in.createTypedArrayList(Step.CREATOR);
   }
 
   public static final Creator<Recipe> CREATOR = new Creator<Recipe>() {

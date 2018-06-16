@@ -23,6 +23,22 @@
     <activity android:name=".ui.reciepedetails.RecipeDetailsViewModel"/>
     <activity android:name=".ui.reciepedetails.RecipeDetailsActivity"/>
     <activity android:name=".ui.steps.StepActivity"/>
+
+    <receiver android:name=".ui.widget.BackingAppWidget">
+      <intent-filter>
+        <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+      </intent-filter>
+
+      <meta-data
+          android:name="android.appwidget.provider"
+          android:resource="@xml/backing_app_widget_info"/>
+    </receiver>
+
+    <activity android:name=".ui.widget.BackingAppWidgetConfigureActivity">
+      <intent-filter>
+        <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+      </intent-filter>
+    </activity>
   </application>
 
 </manifest>

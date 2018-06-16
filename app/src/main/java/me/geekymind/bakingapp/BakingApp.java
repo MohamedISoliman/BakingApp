@@ -2,6 +2,7 @@ package me.geekymind.bakingapp;
 
 import android.app.Application;
 import com.squareup.picasso.Picasso;
+import me.geekymind.bakingapp.di.AppDependencies;
 import timber.log.Timber;
 
 /**
@@ -15,5 +16,6 @@ public class BakingApp extends Application {
 
     Timber.plant(new Timber.DebugTree());
     Picasso.get().setLoggingEnabled(true);
+    AppDependencies.createGraph(this);
   }
 }

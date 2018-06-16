@@ -1,6 +1,10 @@
 package me.geekymind.bakingapp.di;
 
+import android.arch.persistence.room.Room;
+import android.content.Context;
+import me.geekymind.bakingapp.BakingApp;
 import me.geekymind.bakingapp.data.RecipesRepository;
+import me.geekymind.bakingapp.data.local.RecipeDatabase;
 
 /**
  * Created by Mohamed Ibrahim on 4/14/18.
@@ -8,19 +12,27 @@ import me.geekymind.bakingapp.data.RecipesRepository;
 public class AppDependencies {
 
   private static AppDependencies instance;
-  private static final RecipesRepository REPOSITORY = new RecipesRepository();
+  private final RecipesRepository repository;
 
-  private AppDependencies() {
+  private AppDependencies(Context context) {
+    RecipeDatabase database =
+        Room.databaseBuilder(context, RecipeDatabase.class, "BackingApp.db").build();
+    repository = new RecipesRepository(database);
+  }
+
+  public static void createGraph(Context context) {
+    instance = new AppDependencies(context);
   }
 
   public static AppDependencies getInstance() {
     if (instance == null) {
-      instance = new AppDependencies();
+      throw new IllegalStateException(
+          "Init dependencies by Calling createGraph() " + BakingApp.class.getSimpleName());
     }
     return instance;
   }
 
   public RecipesRepository getRecipesRepository() {
-    return REPOSITORY;
+    return repository;
   }
 }

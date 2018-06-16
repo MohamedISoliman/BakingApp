@@ -1,10 +1,18 @@
 package me.geekymind.bakingapp.data.entity;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
 import com.google.gson.annotations.SerializedName;
 
+@Entity(tableName = "ingredients")
 public class Ingredient implements Parcelable {
+
+  @PrimaryKey(autoGenerate = true)
+  private int ingredientId;
+
+  private double recipeId;
 
   @SerializedName("quantity")
   private double quantity;
@@ -13,30 +21,53 @@ public class Ingredient implements Parcelable {
   private String measure;
 
   @SerializedName("ingredient")
-  private String ingredient;
+  private String ingredientDescription;
 
-  public void setQuantity(int quantity) {
-    this.quantity = quantity;
+  public int getIngredientId() {
+    return ingredientId;
+  }
+
+  public void setIngredientId(int ingredientId) {
+    this.ingredientId = ingredientId;
+  }
+
+  public double getRecipeId() {
+    return recipeId;
+  }
+
+  public void setRecipeId(double recipeId) {
+    this.recipeId = recipeId;
   }
 
   public double getQuantity() {
     return quantity;
   }
 
-  public void setMeasure(String measure) {
-    this.measure = measure;
-  }
-
   public String getMeasure() {
     return measure;
   }
 
-  public void setIngredient(String ingredient) {
-    this.ingredient = ingredient;
+  public void setMeasure(String measure) {
+    this.measure = measure;
   }
 
-  public String getIngredient() {
-    return ingredient;
+  public String getIngredientDescription() {
+    return ingredientDescription;
+  }
+
+  public void setIngredientDescription(String ingredientDescription) {
+    this.ingredientDescription = ingredientDescription;
+  }
+
+  public static Creator<Ingredient> getCREATOR() {
+    return CREATOR;
+  }
+
+  public Ingredient() {
+  }
+
+  public void setQuantity(double quantity) {
+    this.quantity = quantity;
   }
 
   @Override
@@ -48,8 +79,8 @@ public class Ingredient implements Parcelable {
         + ",measure = '"
         + measure
         + '\''
-        + ",ingredient = '"
-        + ingredient
+        + ",ingredientDescription = '"
+        + ingredientDescription
         + '\''
         + "}";
   }
@@ -61,18 +92,19 @@ public class Ingredient implements Parcelable {
 
   @Override
   public void writeToParcel(Parcel dest, int flags) {
+    dest.writeInt(this.ingredientId);
+    dest.writeDouble(this.recipeId);
     dest.writeDouble(this.quantity);
     dest.writeString(this.measure);
-    dest.writeString(this.ingredient);
-  }
-
-  public Ingredient() {
+    dest.writeString(this.ingredientDescription);
   }
 
   protected Ingredient(Parcel in) {
+    this.ingredientId = in.readInt();
+    this.recipeId = in.readDouble();
     this.quantity = in.readDouble();
     this.measure = in.readString();
-    this.ingredient = in.readString();
+    this.ingredientDescription = in.readString();
   }
 
   public static final Creator<Ingredient> CREATOR = new Creator<Ingredient>() {

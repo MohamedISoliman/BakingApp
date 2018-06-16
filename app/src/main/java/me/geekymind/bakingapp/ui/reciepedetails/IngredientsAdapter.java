@@ -41,7 +41,7 @@ public class IngredientsAdapter
     }
 
     public void bindData(Ingredient ingredient) {
-      itemIngredientBinding.ingredientTitle.setText(ingredient.getIngredient());
+      itemIngredientBinding.ingredientTitle.setText(ingredient.getIngredientDescription());
       itemIngredientBinding.ingredientMeasure.setText(
           String.format("%s:%s ", ingredient.getQuantity(), ingredient.getMeasure()));
     }

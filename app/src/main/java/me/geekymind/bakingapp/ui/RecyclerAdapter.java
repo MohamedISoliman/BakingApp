@@ -2,7 +2,6 @@ package me.geekymind.bakingapp.ui;
 
 import android.support.v7.widget.RecyclerView;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -11,12 +10,9 @@ import java.util.List;
 public abstract class RecyclerAdapter<T, VH extends RecyclerView.ViewHolder>
     extends RecyclerView.Adapter<VH> {
 
-  private List<T> data = Collections.emptyList();
+  private List<T> data = new ArrayList<T>();
 
   public void setData(List<T> data) {
-    if (this.data.isEmpty()) {
-      this.data = new ArrayList<>();
-    }
     this.data = data;
     notifyDataSetChanged();
   }
