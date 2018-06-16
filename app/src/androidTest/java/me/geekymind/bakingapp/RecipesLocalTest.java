@@ -17,6 +17,7 @@ import static org.junit.Assert.assertNotNull;
 /**
  * Created by Mohamed Ibrahim on 6/13/18.
  */
+@RunWith(AndroidJUnit4.class)
 public class RecipesLocalTest {
 
   RecipeDatabase recipeDatabase;
@@ -35,13 +36,13 @@ public class RecipesLocalTest {
 
   @Test
   public void insertIngredient() {
-    //Ingredient ingredient = TestDataFactory.createRandomIngredient();
-    //double recipeId = 13.5;
-    //ingredient.setRecipeId(recipeId);
-    //recipeDatabase.insertIngredients(ingredient).blockingAwait();
-    //List<Ingredient> ingredients = recipeDatabase.getIngredients(recipeId).blockingSingle();
-    //Ingredient dbItem = ingredients.get(0);
-    //assertNotNull(dbItem);
-    //assertEquals(dbItem.getRecipeId(), recipeId, 1);
+    Ingredient ingredient = TestDataFactory.createRandomIngredient();
+    double recipeId = 13.5;
+    ingredient.setRecipeId(recipeId);
+    recipeDatabase.insertIngredients(ingredient).blockingAwait();
+    List<Ingredient> ingredients = recipeDatabase.getIngredients(recipeId).blockingSingle();
+    Ingredient dbItem = ingredients.get(0);
+    assertNotNull(dbItem);
+    assertEquals(dbItem.getRecipeId(), recipeId, 1);
   }
 }
