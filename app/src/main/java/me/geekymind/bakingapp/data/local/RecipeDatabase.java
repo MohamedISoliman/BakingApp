@@ -12,18 +12,39 @@ import me.geekymind.bakingapp.data.entity.Recipe;
 /**
  * Created by Mohamed Ibrahim on 5/19/18.
  */
-@Database(entities = { Recipe.class, Ingredient.class }, version = 2, exportSchema = false)
+@Database(entities = { Recipe.class, Ingredient.class }, version = 4, exportSchema = false)
 public abstract class RecipeDatabase extends RoomDatabase {
 
   public abstract RecipesLocal recipesDao();
 
   public Completable insertIngredients(Ingredient... ingredients) {
-    return Completable.fromAction(() ->
-        recipesDao().insertIngredients(ingredients))
+    return Completable.fromAction(() -> recipesDao().insertIngredients(ingredients))
+        .subscribeOn(Schedulers.io());
+  }
+
+  public Completable insertRecipes(Recipe... recipes) {
+    return Completable.fromAction(() -> recipesDao().insertRecipes(recipes))
         .subscribeOn(Schedulers.io());
   }
 
   public Observable<List<Ingredient>> getIngredients(double recipeId) {
     return recipesDao().getIngredients(recipeId).toObservable();
+  }
+
+  public Observable<List<Recipe>> getRecipes(double recipeId) {
+    return recipesDao().getRecipes(recipeId)
+        .toObservable()
+        .flatMap(Observable::fromIterable)
+        .flatMap(this::attachIngredientsToRecipe)
+        .toList()
+        .toObservable();
+  }
+
+  private Observable<Recipe> attachIngredientsToRecipe(Recipe recipe) {
+    return Observable.just(recipe)
+        .zipWith(getIngredients(recipe.getId()), (recipe1, ingredients) -> {
+          recipe1.setIngredients(ingredients);
+          return recipe1;
+        });
   }
 }

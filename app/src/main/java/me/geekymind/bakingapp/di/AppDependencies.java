@@ -15,8 +15,9 @@ public class AppDependencies {
   private final RecipesRepository repository;
 
   private AppDependencies(Context context) {
-    RecipeDatabase database =
-        Room.databaseBuilder(context, RecipeDatabase.class, "BackingApp.db").build();
+    RecipeDatabase database = Room.databaseBuilder(context, RecipeDatabase.class, "BackingApp.db")
+        .fallbackToDestructiveMigration()
+        .build();
     repository = new RecipesRepository(database);
   }
 

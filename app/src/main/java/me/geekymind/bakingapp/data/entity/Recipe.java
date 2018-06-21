@@ -11,9 +11,6 @@ import java.util.List;
 @Entity(tableName = "recipes")
 public class Recipe implements Parcelable {
 
-  @PrimaryKey(autoGenerate = true)
-  private int primaryKey;
-
   @SerializedName("image")
   private String image;
 
@@ -28,20 +25,12 @@ public class Recipe implements Parcelable {
   private List<Ingredient> ingredients;
 
   @SerializedName("id")
-  @Ignore
+  @PrimaryKey
   private double id;
 
   @SerializedName("steps")
   @Ignore
   private List<Step> steps;
-
-  public int getPrimaryKey() {
-    return primaryKey;
-  }
-
-  public void setPrimaryKey(int primaryKey) {
-    this.primaryKey = primaryKey;
-  }
 
   public String getImage() {
     return image;
@@ -98,7 +87,6 @@ public class Recipe implements Parcelable {
 
   @Override
   public void writeToParcel(Parcel dest, int flags) {
-    dest.writeInt(this.primaryKey);
     dest.writeString(this.image);
     dest.writeDouble(this.servings);
     dest.writeString(this.name);
@@ -111,7 +99,6 @@ public class Recipe implements Parcelable {
   }
 
   protected Recipe(Parcel in) {
-    this.primaryKey = in.readInt();
     this.image = in.readString();
     this.servings = in.readDouble();
     this.name = in.readString();

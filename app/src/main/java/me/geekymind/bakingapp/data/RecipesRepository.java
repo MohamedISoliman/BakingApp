@@ -27,9 +27,11 @@ public class RecipesRepository {
     return recipesRemote.getRecipes()
         .toObservable()
         .flatMap(Observable::fromIterable)
-        .flatMap(recipe -> Observable.zip(Observable.just(recipe), insertIngredients(recipe),
-            (recipeItem, ignored) -> recipeItem))
-        .toList();
+        .flatMap(recipe -> Observable.just(recipe)
+            .zipWith(insertIngredients(recipe), (recipeItem, ignored) -> recipeItem))
+        .toList()
+        .flatMap(recipes -> database.insertRecipes(recipes.toArray(new Recipe[0]))
+            .andThen(Single.just(recipes)));
   }
 
   private Observable<List<Ingredient>> insertIngredients(Recipe recipe) {
@@ -40,7 +42,8 @@ public class RecipesRepository {
         })
         .toList()
         .toObservable()
-        .doOnNext(ingredients -> database.insertIngredients(toArray(ingredients)));
+        .flatMap(ingredients -> database.insertIngredients(toArray(ingredients))
+            .andThen(Observable.just(ingredients)));
   }
 
   @NonNull

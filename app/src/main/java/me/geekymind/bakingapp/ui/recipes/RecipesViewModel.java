@@ -15,6 +15,7 @@ import java.util.List;
 import me.geekymind.bakingapp.data.RecipesRepository;
 import me.geekymind.bakingapp.data.entity.Recipe;
 import me.geekymind.bakingapp.di.AppDependencies;
+import timber.log.Timber;
 
 /**
  * Created by Mohamed Ibrahim on 4/14/18.
@@ -37,12 +38,16 @@ public class RecipesViewModel extends ViewModel {
     if (disposable == null) {
       disposable = Observable.just("start")
           .subscribeOn(Schedulers.io())
-          .flatMapSingle(s -> recipesSubject.getValue() == null ? repository.getRecipes()
-              .compose(loadingTransformer()) : Single.just(recipesSubject.getValue()))
+          .flatMapSingle(s -> recipesSubject.getValue() == null ? retrieveRecipes()
+              : Single.just(recipesSubject.getValue()))
           .subscribe(recipes -> recipesSubject.onNext(recipes),
               throwable -> errorMessageSubject.onNext(throwable.getMessage()));
       disposables.add(disposable);
     }
+  }
+
+  private Single<List<Recipe>> retrieveRecipes() {
+    return repository.getRecipes().compose(loadingTransformer()).compose(logging());
   }
 
   public Observable<List<Recipe>> recipesObservable() {
@@ -64,5 +69,9 @@ public class RecipesViewModel extends ViewModel {
   private <T> SingleTransformer<T, T> loadingTransformer() {
     return upstream -> upstream.doOnSubscribe(__ -> isLoading.onNext(true))
         .doAfterTerminate(() -> isLoading.onNext(false));
+  }
+
+  private <T> SingleTransformer<T, T> logging() {
+    return upstream -> upstream.doOnError(Timber::e);
   }
 }
