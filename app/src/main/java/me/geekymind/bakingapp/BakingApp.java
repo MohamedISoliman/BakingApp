@@ -2,6 +2,7 @@ package me.geekymind.bakingapp;
 
 import android.app.Application;
 import com.squareup.picasso.Picasso;
+import es.dmoral.toasty.Toasty;
 import me.geekymind.bakingapp.di.AppDependencies;
 import timber.log.Timber;
 

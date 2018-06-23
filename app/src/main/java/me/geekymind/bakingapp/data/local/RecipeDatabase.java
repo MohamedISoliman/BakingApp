@@ -4,6 +4,7 @@ import android.arch.persistence.room.Database;
 import android.arch.persistence.room.RoomDatabase;
 import io.reactivex.Completable;
 import io.reactivex.Observable;
+import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
 import java.util.List;
 import me.geekymind.bakingapp.data.entity.Ingredient;
@@ -12,7 +13,7 @@ import me.geekymind.bakingapp.data.entity.Recipe;
 /**
  * Created by Mohamed Ibrahim on 5/19/18.
  */
-@Database(entities = { Recipe.class, Ingredient.class }, version = 4, exportSchema = false)
+@Database(entities = { Recipe.class, Ingredient.class }, version = 5, exportSchema = false)
 public abstract class RecipeDatabase extends RoomDatabase {
 
   public abstract RecipesLocal recipesDao();
@@ -31,8 +32,8 @@ public abstract class RecipeDatabase extends RoomDatabase {
     return recipesDao().getIngredients(recipeId).toObservable();
   }
 
-  public Observable<List<Recipe>> getRecipes(double recipeId) {
-    return recipesDao().getRecipes(recipeId)
+  public Observable<List<Recipe>> getRecipes() {
+    return recipesDao().getRecipes()
         .toObservable()
         .flatMap(Observable::fromIterable)
         .flatMap(this::attachIngredientsToRecipe)
@@ -46,5 +47,13 @@ public abstract class RecipeDatabase extends RoomDatabase {
           recipe1.setIngredients(ingredients);
           return recipe1;
         });
+  }
+
+  public Single<Recipe> getSelectedRecipe(long selectedRecipeId) {
+    return recipesDao().getSelectedRecipe(selectedRecipeId)
+        .toObservable()
+        .flatMap(this::attachIngredientsToRecipe)
+        .distinct()
+        .singleOrError();
   }
 }

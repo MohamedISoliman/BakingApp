@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
+  <android.support.constraint.ConstraintLayout
+      android:id="@+id/item_container"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_margin="16dp"
+      android:clickable="true"
+      android:focusable="true"
+      >
+    <TextView
+        android:id="@+id/recipe_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        tools:text="@tools:sample/lorem"
+        style="@style/TextAppearance.AppCompat.Title"
+        />
+  </android.support.constraint.ConstraintLayout>
+</layout>

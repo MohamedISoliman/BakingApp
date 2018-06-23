@@ -26,7 +26,7 @@ public class Recipe implements Parcelable {
 
   @SerializedName("id")
   @PrimaryKey
-  private double id;
+  private long id;
 
   @SerializedName("steps")
   @Ignore
@@ -64,11 +64,11 @@ public class Recipe implements Parcelable {
     this.ingredients = ingredients;
   }
 
-  public double getId() {
+  public long getId() {
     return id;
   }
 
-  public void setId(double id) {
+  public void setId(long id) {
     this.id = id;
   }
 
@@ -103,7 +103,7 @@ public class Recipe implements Parcelable {
     this.servings = in.readDouble();
     this.name = in.readString();
     this.ingredients = in.createTypedArrayList(Ingredient.CREATOR);
-    this.id = in.readDouble();
+    this.id = in.readLong();
     this.steps = in.createTypedArrayList(Step.CREATOR);
   }
 

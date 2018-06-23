@@ -4,6 +4,7 @@ import android.arch.persistence.room.Room;
 import android.content.Context;
 import me.geekymind.bakingapp.BakingApp;
 import me.geekymind.bakingapp.data.RecipesRepository;
+import me.geekymind.bakingapp.data.local.PreferenceHelper;
 import me.geekymind.bakingapp.data.local.RecipeDatabase;
 
 /**
@@ -18,7 +19,8 @@ public class AppDependencies {
     RecipeDatabase database = Room.databaseBuilder(context, RecipeDatabase.class, "BackingApp.db")
         .fallbackToDestructiveMigration()
         .build();
-    repository = new RecipesRepository(database);
+    PreferenceHelper preferenceHelper = new PreferenceHelper(context);
+    repository = new RecipesRepository(database, preferenceHelper);
   }
 
   public static void createGraph(Context context) {

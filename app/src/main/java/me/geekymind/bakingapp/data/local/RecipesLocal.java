@@ -2,6 +2,7 @@ package me.geekymind.bakingapp.data.local;
 
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
+import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 import io.reactivex.Single;
 import java.util.List;
@@ -17,12 +18,15 @@ public interface RecipesLocal {
   @Query("SELECT * FROM ingredients where recipeId like:id")
   Single<List<Ingredient>> getIngredients(double id);
 
-  @Query("SELECT * FROM recipes where id like:id")
-  Single<List<Recipe>> getRecipes(double id);
+  @Query("SELECT * FROM recipes")
+  Single<List<Recipe>> getRecipes();
 
-  @Insert
+  @Insert(onConflict = OnConflictStrategy.REPLACE)
   void insertIngredients(Ingredient... ingredients);
 
-  @Insert
+  @Insert(onConflict = OnConflictStrategy.REPLACE)
   void insertRecipes(Recipe... recipes);
+
+  @Query("SELECT * FROM recipes where id like:selectedRecipeId")
+  Single<Recipe> getSelectedRecipe(long selectedRecipeId);
 }
