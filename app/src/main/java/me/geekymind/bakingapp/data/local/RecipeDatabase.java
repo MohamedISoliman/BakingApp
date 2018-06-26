@@ -9,11 +9,12 @@ import io.reactivex.schedulers.Schedulers;
 import java.util.List;
 import me.geekymind.bakingapp.data.entity.Ingredient;
 import me.geekymind.bakingapp.data.entity.Recipe;
+import timber.log.Timber;
 
 /**
  * Created by Mohamed Ibrahim on 5/19/18.
  */
-@Database(entities = { Recipe.class, Ingredient.class }, version = 5, exportSchema = false)
+@Database(entities = { Recipe.class, Ingredient.class }, version = 9, exportSchema = false)
 public abstract class RecipeDatabase extends RoomDatabase {
 
   public abstract RecipesLocal recipesDao();
@@ -34,6 +35,7 @@ public abstract class RecipeDatabase extends RoomDatabase {
 
   public Observable<List<Recipe>> getRecipes() {
     return recipesDao().getRecipes()
+        .doOnError(Timber::e)
         .toObservable()
         .flatMap(Observable::fromIterable)
         .flatMap(this::attachIngredientsToRecipe)
