@@ -1,12 +1,13 @@
 package me.geekymind.bakingapp.data.entity;
 
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
 import com.google.gson.annotations.SerializedName;
 
-@Entity(tableName = "ingredients")
+@Entity(tableName = "ingredients", indices = { @Index(value = { "ingredientId" }, unique = true) })
 public class Ingredient implements Parcelable {
 
   @PrimaryKey(autoGenerate = true)
