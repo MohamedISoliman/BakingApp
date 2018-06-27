@@ -54,6 +54,6 @@ public class RecipesActivity extends AppCompatActivity {
       recipesBinding.refreshLayout.setEnabled(refreshing);
       recipesBinding.refreshLayout.setRefreshing(refreshing);
     });
-    viewModel.errorObservable().subscribe(error -> Toasty.error(this, error));
+    viewModel.errorObservable().subscribe(error -> Toasty.error(this, error).show());
   }
 }

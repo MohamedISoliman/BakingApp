@@ -30,7 +30,8 @@ public abstract class RecipeDatabase extends RoomDatabase {
   }
 
   public Observable<List<Ingredient>> getIngredients(double recipeId) {
-    return recipesDao().getIngredients(recipeId).toObservable();
+    return recipesDao().getIngredients(recipeId)
+        .toObservable();
   }
 
   public Observable<List<Recipe>> getRecipes() {
@@ -55,7 +56,6 @@ public abstract class RecipeDatabase extends RoomDatabase {
     return recipesDao().getSelectedRecipe(selectedRecipeId)
         .toObservable()
         .flatMap(this::attachIngredientsToRecipe)
-        .distinct()
         .singleOrError();
   }
 }

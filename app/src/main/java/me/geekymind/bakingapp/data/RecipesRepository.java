@@ -29,24 +29,14 @@ public class RecipesRepository {
   }
 
   public Single<List<Recipe>> getRecipes() {
-
-    return getLocalRecipes().onErrorResumeNext(throwable -> recipesRemote.getRecipes()
-            .toObservable()
-            .flatMap(Observable::fromIterable)
-            .flatMap(recipe -> Observable.just(recipe)
-                .zipWith(insertIngredients(recipe), (recipeItem, ignored) -> recipeItem))
-            .toList()
-            .flatMap(recipes -> database.insertRecipes(recipes.toArray(new Recipe[0]))
-                .andThen(Single.just(recipes))));
-
-    //return recipesRemote.getRecipes()
-    //    .toObservable()
-    //    .flatMap(Observable::fromIterable)
-    //    .flatMap(recipe -> Observable.just(recipe)
-    //        .zipWith(insertIngredients(recipe), (recipeItem, ignored) -> recipeItem))
-    //    .toList()
-    //    .flatMap(recipes -> database.insertRecipes(recipes.toArray(new Recipe[0]))
-    //        .andThen(Single.just(recipes)));
+    return recipesRemote.getRecipes()
+        .toObservable()
+        .flatMap(Observable::fromIterable)
+        .flatMap(recipe -> Observable.just(recipe)
+            .zipWith(insertIngredients(recipe), (recipeItem, ignored) -> recipeItem))
+        .toList()
+        .flatMap(recipes -> database.insertRecipes(recipes.toArray(new Recipe[0]))
+            .andThen(Single.just(recipes)));
   }
 
   public Single<List<Recipe>> getLocalRecipes() {

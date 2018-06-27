@@ -7,7 +7,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import com.google.gson.annotations.SerializedName;
 
-@Entity(tableName = "ingredients", indices = { @Index(value = { "ingredientId" }, unique = true) })
+@Entity(tableName = "ingredients", indices = {
+    @Index(value = { "ingredientId", "ingredientDescription" }, unique = true)
+})
 public class Ingredient implements Parcelable {
 
   @PrimaryKey(autoGenerate = true)

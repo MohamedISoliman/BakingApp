@@ -31,7 +31,7 @@ public class BackingAppWidgetConfigureActivity extends AppCompatActivity {
   int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
   BackingAppWidgetConfigureActivityBinding binding;
 
-  private void updateWidget(Context context, long id) {
+  private void updateWidget(Context context) {
     AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
     BackingAppWidget.updateAppWidget(context, appWidgetManager, mAppWidgetId);
 
@@ -90,7 +90,7 @@ public class BackingAppWidgetConfigureActivity extends AppCompatActivity {
     viewModel.getRecipeSubject().subscribe(recipes -> {
       adapter.setData(recipes);
     }, throwable -> {
-      Toasty.error(this, throwable.getMessage());
+      Toasty.error(this, throwable.getMessage()).show();
     });
   }
 
@@ -139,8 +139,8 @@ public class BackingAppWidgetConfigureActivity extends AppCompatActivity {
       void bindData(Recipe recipe) {
         viewDataBinding.recipeTitle.setText(recipe.getName());
         viewDataBinding.recipeTitle.setOnClickListener(v -> {
-          viewModel.saveSelectedRecipeId((long) recipe.getId());
-          updateWidget(context, recipe.getId());
+          viewModel.saveSelectedRecipeId(recipe.getId());
+          updateWidget(context);
         });
       }
     }
