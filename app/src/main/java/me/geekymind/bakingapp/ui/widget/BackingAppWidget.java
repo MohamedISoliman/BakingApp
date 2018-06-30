@@ -3,13 +3,21 @@ package me.geekymind.bakingapp.ui.widget;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.widget.RemoteViews;
 import android.widget.Toast;
+
+import java.util.ArrayList;
 import java.util.List;
+
+import es.dmoral.toasty.Toasty;
 import me.geekymind.bakingapp.R;
 import me.geekymind.bakingapp.data.RecipesRepository;
 import me.geekymind.bakingapp.data.entity.Ingredient;
 import me.geekymind.bakingapp.di.AppDependencies;
+import timber.log.Timber;
 
 /**
  * Implementation of App Widget functionality.
@@ -34,17 +42,13 @@ public class BackingAppWidget extends AppWidgetProvider {
 
       views.setTextViewText(R.id.appwidget_text, recipe.getName());
 
-      List<Ingredient> ingredients = recipe.getIngredients();
-      for (Ingredient item : ingredients) {
-        RemoteViews ingredientView =
-            new RemoteViews(context.getPackageName(), R.layout.widget_ingredients_list_item);
-        String line =
-            item.getIngredientDescription() + "- " + String.format("%s:%s ", item.getQuantity(),
-                item.getMeasure());
+      Intent intent = new Intent(context, ListViewWidgetService.class);
+      Bundle bundle = new Bundle();
+      bundle.putParcelableArrayList(ListViewWidgetService.KEY_INGREDIENTS_LIST,
+              (ArrayList<? extends Parcelable>) recipe.getIngredients());
+      intent.putExtra(ListViewWidgetService.KEY_INGREDIENTS_LIST,bundle);
+      views.setRemoteAdapter(R.id.ingredient_list, intent);
 
-        ingredientView.setTextViewText(R.id.widget_ingredient_name, line);
-        views.addView(R.id.ingredient_list, ingredientView);
-      }
       appWidgetManager.updateAppWidget(appWidgetId, views);
     }, throwable -> {
       Toast.makeText(context, throwable.getMessage(), Toast.LENGTH_LONG).show();

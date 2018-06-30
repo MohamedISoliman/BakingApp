@@ -3,6 +3,7 @@ package me.geekymind.bakingapp.data;
 import android.support.annotation.NonNull;
 import io.reactivex.Observable;
 import io.reactivex.Single;
+import io.reactivex.SingleEmitter;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import java.util.List;
@@ -46,6 +47,10 @@ public class RecipesRepository {
         .singleOrError();
   }
 
+  public Single<List<Ingredient>> getIngredientsForSelectedRecipe(){
+      return getSelectedRecipe().map(recipe -> recipe.getIngredients());
+  }
+
   public Single<Recipe> getSelectedRecipe() {
     long selectedRecipeId = preferenceHelper.getSelectedRecipeId();
     return database.getSelectedRecipe(selectedRecipeId)
@@ -53,9 +58,6 @@ public class RecipesRepository {
         .observeOn(AndroidSchedulers.mainThread());
   }
 
-  public long getSelectedRecipeId() {
-    return preferenceHelper.getSelectedRecipeId();
-  }
 
   private Observable<List<Ingredient>> insertIngredients(Recipe recipe) {
     return Observable.fromIterable(recipe.getIngredients())

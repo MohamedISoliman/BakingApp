@@ -12,7 +12,7 @@ import me.geekymind.bakingapp.di.AppDependencies;
 /**
  * Created by Mohamed Ibrahim on 6/23/18.
  */
-class ConfigureWidgetViewModel extends ViewModel {
+public class ConfigureWidgetViewModel extends ViewModel {
 
   private final RecipesRepository recipesRepository;
   private BehaviorSubject<List<Recipe>> recipeSubject = BehaviorSubject.create();

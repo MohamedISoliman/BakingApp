@@ -21,7 +21,7 @@
         <category android:name="android.intent.category.LAUNCHER"/>
       </intent-filter>
     </activity>
-    <activity android:name=".ui.reciepedetails.RecipeDetailsViewModel"/>
+
     <activity android:name=".ui.reciepedetails.RecipeDetailsActivity"/>
     <activity android:name=".ui.steps.StepActivity"/>
 
@@ -41,6 +41,8 @@
         <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
       </intent-filter>
     </activity>
+      <service android:name=".ui.widget.ListViewWidgetService"
+          android:permission="android.permission.BIND_REMOTEVIEWS" />
   </application>
 
 </manifest>
