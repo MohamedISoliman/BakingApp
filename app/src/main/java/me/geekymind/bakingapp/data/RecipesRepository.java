@@ -47,10 +47,6 @@ public class RecipesRepository {
         .singleOrError();
   }
 
-  public Single<List<Ingredient>> getIngredientsForSelectedRecipe(){
-      return getSelectedRecipe().map(recipe -> recipe.getIngredients());
-  }
-
   public Single<Recipe> getSelectedRecipe() {
     long selectedRecipeId = preferenceHelper.getSelectedRecipeId();
     return database.getSelectedRecipe(selectedRecipeId)
