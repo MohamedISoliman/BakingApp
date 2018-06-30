@@ -155,7 +155,6 @@ public class StepFragment extends Fragment {
 
     private void releaseExoPlayer() {
         if (simpleExoPlayer != null) {
-            simpleExoPlayer.stop();
             simpleExoPlayer.release();
         }
     }
