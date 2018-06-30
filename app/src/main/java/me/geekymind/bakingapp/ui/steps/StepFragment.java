@@ -38,7 +38,7 @@ public class StepFragment extends Fragment {
     private FragmentStepBinding binding;
     private Step step;
     private SimpleExoPlayer simpleExoPlayer;
-    private long playBackPositon = 0;
+    private long playBackPositon = -1;
 
     public static StepFragment newInstance(Step step) {
         Bundle args = new Bundle();
@@ -58,7 +58,6 @@ public class StepFragment extends Fragment {
                 DataBindingUtil.inflate(getLayoutInflater(), R.layout.fragment_step, container, false);
         step = getArguments().getParcelable(KEY_STEP);
         binding.stepDescription.setText(step.getDescription());
-        setupVideoPlayer();
 
         return binding.getRoot();
     }
@@ -94,8 +93,8 @@ public class StepFragment extends Fragment {
     private void initExoPlayer() {
         binding.videoPlayer.setVisibility(View.VISIBLE);
         MediaSource mediaSource = getMediaSource();
-        simpleExoPlayer.setPlayWhenReady(true);
         simpleExoPlayer.prepare(mediaSource);
+        simpleExoPlayer.setPlayWhenReady(true);
         resumePlayBack();
     }
 
@@ -114,9 +113,25 @@ public class StepFragment extends Fragment {
     }
 
     private void resumePlayBack() {
-        if (simpleExoPlayer != null) {
+        if (simpleExoPlayer != null && playBackPositon != -1) {
             simpleExoPlayer.seekTo(playBackPositon);
-            simpleExoPlayer.setPlayWhenReady(true);
+        }
+    }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (Util.SDK_INT > 23) {
+            setupVideoPlayer();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (Util.SDK_INT <= 23 || simpleExoPlayer == null) {
+            setupVideoPlayer();
         }
     }
 
@@ -133,23 +148,6 @@ public class StepFragment extends Fragment {
         super.onStop();
         if (Util.SDK_INT > 23) {
             releaseExoPlayer();
-        }
-    }
-
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        if (Util.SDK_INT > 23) {
-            setupVideoPlayer();
-        }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if ((Util.SDK_INT <= 23 || simpleExoPlayer == null)) {
-            setupVideoPlayer();
         }
     }
 
