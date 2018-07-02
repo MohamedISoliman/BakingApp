@@ -38,7 +38,7 @@ public class StepFragment extends Fragment {
   private Step step;
   private SimpleExoPlayer simpleExoPlayer;
   private long playBackPosition = -1;
-  private boolean playWhenReady = false;
+  private boolean playWhenReady = true;
 
   public static StepFragment newInstance(Step step) {
     Bundle args = new Bundle();
