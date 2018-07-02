@@ -37,7 +37,8 @@ public class StepFragment extends Fragment {
   private FragmentStepBinding binding;
   private Step step;
   private SimpleExoPlayer simpleExoPlayer;
-  private long playBackPositon = -1;
+  private long playBackPosition = -1;
+  private boolean playWhenReady = false;
 
   public static StepFragment newInstance(Step step) {
     Bundle args = new Bundle();
@@ -74,7 +75,8 @@ public class StepFragment extends Fragment {
 
   private void onRestoreState(@Nullable Bundle savedInstanceState) {
     if (savedInstanceState != null) {
-      playBackPositon = savedInstanceState.getLong(KEY_PLAYBACK_POSITION);
+      playBackPosition = savedInstanceState.getLong(KEY_PLAYBACK_POSITION);
+      playWhenReady = savedInstanceState.getBoolean(KEY_EXO_IS_PLAYING);
     }
   }
 
@@ -86,8 +88,10 @@ public class StepFragment extends Fragment {
 
   private void savePlaybackPosition(Bundle outState) {
     if (simpleExoPlayer != null) {
-      long currentPosition = simpleExoPlayer.getCurrentPosition();
-      outState.putLong(KEY_PLAYBACK_POSITION, currentPosition);
+      long currentPositionForBundle = simpleExoPlayer.getCurrentPosition();
+      boolean playWhenReadyForBundle = simpleExoPlayer.getPlayWhenReady();
+      outState.putLong(KEY_PLAYBACK_POSITION, currentPositionForBundle);
+      outState.putBoolean(KEY_EXO_IS_PLAYING, playWhenReadyForBundle);
     }
   }
 
@@ -103,7 +107,6 @@ public class StepFragment extends Fragment {
     binding.videoPlayer.setVisibility(View.VISIBLE);
     MediaSource mediaSource = getMediaSource();
     simpleExoPlayer.prepare(mediaSource);
-    simpleExoPlayer.setPlayWhenReady(true);
     resumePlayBack();
   }
 
@@ -122,8 +125,9 @@ public class StepFragment extends Fragment {
   }
 
   private void resumePlayBack() {
-    if (simpleExoPlayer != null && playBackPositon != -1) {
-      simpleExoPlayer.seekTo(playBackPositon);
+    if (simpleExoPlayer != null && playBackPosition != -1) {
+      simpleExoPlayer.seekTo(playBackPosition);
+      simpleExoPlayer.setPlayWhenReady(playWhenReady);
     }
   }
 
