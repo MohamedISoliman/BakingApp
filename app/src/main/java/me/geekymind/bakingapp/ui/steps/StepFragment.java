@@ -9,7 +9,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -22,7 +21,7 @@ import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
-
+import com.squareup.picasso.Picasso;
 import me.geekymind.bakingapp.R;
 import me.geekymind.bakingapp.data.entity.Step;
 import me.geekymind.bakingapp.databinding.FragmentStepBinding;
@@ -32,128 +31,137 @@ import me.geekymind.bakingapp.databinding.FragmentStepBinding;
  */
 public class StepFragment extends Fragment {
 
-    private static final String KEY_STEP = "STEP";
-    private static final String KEY_PLAYBACK_POSITION = "PLAYBACK_POSITION";
-    private static final String KEY_EXO_IS_PLAYING = "PLAYBACK_STATE";
-    private FragmentStepBinding binding;
-    private Step step;
-    private SimpleExoPlayer simpleExoPlayer;
-    private long playBackPositon = -1;
+  private static final String KEY_STEP = "STEP";
+  private static final String KEY_PLAYBACK_POSITION = "PLAYBACK_POSITION";
+  private static final String KEY_EXO_IS_PLAYING = "PLAYBACK_STATE";
+  private FragmentStepBinding binding;
+  private Step step;
+  private SimpleExoPlayer simpleExoPlayer;
+  private long playBackPositon = -1;
 
-    public static StepFragment newInstance(Step step) {
-        Bundle args = new Bundle();
-        StepFragment fragment = new StepFragment();
-        args.putParcelable(KEY_STEP, step);
-        fragment.setArguments(args);
-        return fragment;
+  public static StepFragment newInstance(Step step) {
+    Bundle args = new Bundle();
+    StepFragment fragment = new StepFragment();
+    args.putParcelable(KEY_STEP, step);
+    fragment.setArguments(args);
+    return fragment;
+  }
+
+  @Nullable
+  @Override
+  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+      @Nullable Bundle savedInstanceState) {
+    onRestoreState(savedInstanceState);
+
+    binding =
+        DataBindingUtil.inflate(getLayoutInflater(), R.layout.fragment_step, container, false);
+    step = getArguments().getParcelable(KEY_STEP);
+    binding.stepDescription.setText(step.getDescription());
+    handleVideoThumbnail();
+    return binding.getRoot();
+  }
+
+  private void handleVideoThumbnail() {
+    if (step.getThumbnailURL().isEmpty()) {
+      binding.videoThumbnail.setVisibility(View.GONE);
+    } else {
+      Picasso.get()
+          .load(step.getThumbnailURL())
+          .error(R.drawable.ic_image_black_24dp)
+          .into(binding.videoThumbnail);
     }
+  }
 
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        onRestoreState(savedInstanceState);
-
-        binding =
-                DataBindingUtil.inflate(getLayoutInflater(), R.layout.fragment_step, container, false);
-        step = getArguments().getParcelable(KEY_STEP);
-        binding.stepDescription.setText(step.getDescription());
-
-        return binding.getRoot();
+  private void onRestoreState(@Nullable Bundle savedInstanceState) {
+    if (savedInstanceState != null) {
+      playBackPositon = savedInstanceState.getLong(KEY_PLAYBACK_POSITION);
     }
+  }
 
-    private void onRestoreState(@Nullable Bundle savedInstanceState) {
-        if (savedInstanceState != null) {
-            playBackPositon = savedInstanceState.getLong(KEY_PLAYBACK_POSITION);
-        }
+  @Override
+  public void onSaveInstanceState(@NonNull Bundle outState) {
+    savePlaybackPosition(outState);
+    super.onSaveInstanceState(outState);
+  }
+
+  private void savePlaybackPosition(Bundle outState) {
+    if (simpleExoPlayer != null) {
+      long currentPosition = simpleExoPlayer.getCurrentPosition();
+      outState.putLong(KEY_PLAYBACK_POSITION, currentPosition);
     }
+  }
 
-
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        savePlaybackPosition(outState);
-        super.onSaveInstanceState(outState);
+  private void setupVideoPlayer() {
+    if (step.getVideoURL() == null || step.getVideoURL().isEmpty()) {
+      binding.videoPlayer.setVisibility(View.GONE);
+      return;
     }
+    initExoPlayer();
+  }
 
-    private void savePlaybackPosition(Bundle outState) {
-        if (simpleExoPlayer != null) {
-            long currentPosition = simpleExoPlayer.getCurrentPosition();
-            outState.putLong(KEY_PLAYBACK_POSITION, currentPosition);
-        }
+  private void initExoPlayer() {
+    binding.videoPlayer.setVisibility(View.VISIBLE);
+    MediaSource mediaSource = getMediaSource();
+    simpleExoPlayer.prepare(mediaSource);
+    simpleExoPlayer.setPlayWhenReady(true);
+    resumePlayBack();
+  }
+
+  @NonNull
+  private MediaSource getMediaSource() {
+    TrackSelector trackSelector = new DefaultTrackSelector();
+    LoadControl loadControl = new DefaultLoadControl();
+    simpleExoPlayer =
+        ExoPlayerFactory.newSimpleInstance(new DefaultRenderersFactory(getContext()), trackSelector,
+            loadControl);
+    binding.videoPlayer.setPlayer(simpleExoPlayer);
+    String userAgent = Util.getUserAgent(getContext(), "BackingApp");
+    return new ExtractorMediaSource(Uri.parse(step.getVideoURL()),
+        new DefaultDataSourceFactory(getContext(), userAgent), new DefaultExtractorsFactory(), null,
+        null);
+  }
+
+  private void resumePlayBack() {
+    if (simpleExoPlayer != null && playBackPositon != -1) {
+      simpleExoPlayer.seekTo(playBackPositon);
     }
+  }
 
-    private void setupVideoPlayer() {
-        if (step.getVideoURL() == null || step.getVideoURL().isEmpty()) {
-            binding.videoPlayer.setVisibility(View.GONE);
-            return;
-        }
-        initExoPlayer();
+  @Override
+  public void onStart() {
+    super.onStart();
+    if (Util.SDK_INT > 23) {
+      setupVideoPlayer();
     }
+  }
 
-    private void initExoPlayer() {
-        binding.videoPlayer.setVisibility(View.VISIBLE);
-        MediaSource mediaSource = getMediaSource();
-        simpleExoPlayer.prepare(mediaSource);
-        simpleExoPlayer.setPlayWhenReady(true);
-        resumePlayBack();
+  @Override
+  public void onResume() {
+    super.onResume();
+    if (Util.SDK_INT <= 23 || simpleExoPlayer == null) {
+      setupVideoPlayer();
     }
+  }
 
-    @NonNull
-    private MediaSource getMediaSource() {
-        TrackSelector trackSelector = new DefaultTrackSelector();
-        LoadControl loadControl = new DefaultLoadControl();
-        simpleExoPlayer =
-                ExoPlayerFactory.newSimpleInstance(new DefaultRenderersFactory(getContext()), trackSelector,
-                        loadControl);
-        binding.videoPlayer.setPlayer(simpleExoPlayer);
-        String userAgent = Util.getUserAgent(getContext(), "BackingApp");
-        return new ExtractorMediaSource(Uri.parse(step.getVideoURL()),
-                new DefaultDataSourceFactory(getContext(), userAgent), new DefaultExtractorsFactory(), null,
-                null);
+  @Override
+  public void onPause() {
+    super.onPause();
+    if (Util.SDK_INT <= 23) {
+      releaseExoPlayer();
     }
+  }
 
-    private void resumePlayBack() {
-        if (simpleExoPlayer != null && playBackPositon != -1) {
-            simpleExoPlayer.seekTo(playBackPositon);
-        }
+  @Override
+  public void onStop() {
+    super.onStop();
+    if (Util.SDK_INT > 23) {
+      releaseExoPlayer();
     }
+  }
 
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        if (Util.SDK_INT > 23) {
-            setupVideoPlayer();
-        }
+  private void releaseExoPlayer() {
+    if (simpleExoPlayer != null) {
+      simpleExoPlayer.release();
     }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (Util.SDK_INT <= 23 || simpleExoPlayer == null) {
-            setupVideoPlayer();
-        }
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        if (Util.SDK_INT <= 23) {
-            releaseExoPlayer();
-        }
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        if (Util.SDK_INT > 23) {
-            releaseExoPlayer();
-        }
-    }
-
-    private void releaseExoPlayer() {
-        if (simpleExoPlayer != null) {
-            simpleExoPlayer.release();
-        }
-    }
+  }
 }
